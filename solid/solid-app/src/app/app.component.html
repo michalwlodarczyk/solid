@@ -1,0 +1,51 @@
+<h1>Książki:</h1>
+<ul>
+  <li *ngFor="let book of books">
+    {{ book.getAuthor() }} - {{ book.getTitle() }}
+    <span *ngIf="isBookBorrowed(book)">
+      (wypożyczona: {{ getClientOfBook(book)?.getName() }})
+      <button (click)="onReturnBookClicked(book)">zwróć książkę</button>
+    </span>
+  </li>
+</ul>
+
+<hr />
+
+<h1>Klienci:</h1>
+<ul>
+  <li *ngFor="let client of clients">
+    {{ client.getName() }}
+    <ul>
+      <li *ngFor="let book of getClientBooks(client)">
+        {{ book.getAuthor() }} - {{ book.getTitle() }}
+        <button (click)="onReturnBookClicked(book)">zwróć książkę</button>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1>Dodaj książkę:</h1>
+<label>autor: </label><input type="text" [(ngModel)]="newBookAuthor" /><br />
+<label>tytuł: </label><input type="text" [(ngModel)]="newBookTitle" /><br />
+<button (click)="onNewBookAdd()">dodaj książkę</button>
+
+<hr />
+
+<h1>Dodaj klienta:</h1>
+<label>imię: </label><input type="text" [(ngModel)]="newClientName" /><br />
+<label>nazwisko: </label><input type="text" [(ngModel)]="newClientSurname" /><br />
+<button (click)="onNewClientAdd()">dodaj klienta</button>
+
+<hr />
+
+<h1>Wypożycz książkę:</h1>
+<select [(ngModel)]="rentalBook">
+  <option *ngFor="let book of books" [ngValue]="book">{{ book.getAuthor() }} - {{ book.getTitle() }}</option>
+</select>
+<select [(ngModel)]="rentalClient">
+  <option *ngFor="let client of clients" [ngValue]="client">{{ client.getName() }}</option>
+</select>
+<br />
+<button (click)="onBorrowBookClick()">wypożycz książkę</button>
