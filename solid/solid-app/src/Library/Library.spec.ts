@@ -35,14 +35,10 @@ describe('Library', () => {
   });
 
   it('should return books', () => {
-    jest.spyOn(books, 'getAllBooks');
-    lib.getAllBooks();
-    expect(books.getAllBooks).toHaveBeenCalled();
+    expect(lib.getAllBooks()).toBe(books);
   });
 
   it('should return clients', () => {
-    jest.spyOn(clients, 'getAllClients');
-    lib.getAllClients();
-    expect(clients.getAllClients).toHaveBeenCalled();
+    expect(lib.getAllClients()).toBe(clients);
   });
 });

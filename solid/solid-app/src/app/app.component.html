@@ -1,6 +1,6 @@
 <h1>Książki:</h1>
 <ul>
-  <li *ngFor="let book of books">
+  <li *ngFor="let book of bookList.getAllBooks()">
     {{ book.getAuthor() }} - {{ book.getTitle() }}
     <span *ngIf="isBookBorrowed(book)">
       (wypożyczona: {{ getClientOfBook(book)?.getName() }})
@@ -13,7 +13,7 @@
 
 <h1>Klienci:</h1>
 <ul>
-  <li *ngFor="let client of clients">
+  <li *ngFor="let client of clientList.getAllClients()">
     {{ client.getName() }}
     <ul>
       <li *ngFor="let book of getClientBooks(client)">
@@ -42,10 +42,10 @@
 
 <h1>Wypożycz książkę:</h1>
 <select [(ngModel)]="rentalBook">
-  <option *ngFor="let book of books" [ngValue]="book">{{ book.getAuthor() }} - {{ book.getTitle() }}</option>
+  <option *ngFor="let book of bookList.getAllBooks()" [ngValue]="book">{{ book.getAuthor() }} - {{ book.getTitle() }}</option>
 </select>
 <select [(ngModel)]="rentalClient">
-  <option *ngFor="let client of clients" [ngValue]="client">{{ client.getName() }}</option>
+  <option *ngFor="let client of clientList.getAllClients()" [ngValue]="client">{{ client.getName() }}</option>
 </select>
 <br />
 <button (click)="onBorrowBookClick()">wypożycz książkę</button>

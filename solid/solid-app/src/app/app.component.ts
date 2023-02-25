@@ -1,11 +1,13 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {Library, LibraryType} from "../Library/Library";
-import {ClientList} from "../Client/ClientList";
-import {BookList} from "../Book/BookList";
+import {ClientList, ClientListType} from "../Client/ClientList";
+import {BookList, BookListType} from "../Book/BookList";
 import {Book, BookType} from "../Book/Book";
 import {Client, ClientType} from "../Client/Client";
-import {Rental, RentalType} from "../Rental/Rental";
-import {BookStatus} from "../Book/BookStatus";
+import {RentalList, RentalListType} from "../Rental/RentalList";
+import {RentalCreator} from "../Rental/RentalCreator";
+import {RentalRemover} from "../Rental/RentalRemover";
+import {RentalResolver} from "../Rental/RentalResolver";
 
 @Component({
   selector: 'app-root',
@@ -14,9 +16,9 @@ import {BookStatus} from "../Book/BookStatus";
 })
 export class AppComponent {
   private readonly library: LibraryType;
-  private readonly rental: RentalType;
-  protected readonly books: Array<BookType> = [];
-  protected readonly clients: Array<ClientType> = [];
+  private readonly rentalList: RentalListType;
+  protected readonly bookList: BookListType;
+  protected readonly clientList: ClientListType;
 
   // forms:
   protected newBookAuthor: string = '';
@@ -30,9 +32,9 @@ export class AppComponent {
     const clients = new ClientList();
     const books = new BookList();
     this.library = new Library(books, clients);
-    this.rental = new Rental(new BookStatus());
-    this.books = this.library.getAllBooks();
-    this.clients = this.library.getAllClients();
+    this.rentalList = new RentalList();
+    this.bookList = this.library.getAllBooks();
+    this.clientList = this.library.getAllClients();
 
     // fixtures:
     const book1 = new Book('book 1', 'author A');
@@ -50,28 +52,27 @@ export class AppComponent {
     this.library.addClient(new Client('client CCC'));
     this.library.addClient(new Client('client DDD'));
 
-    this.rental.borrow(clientA, book1);
+    const rentalCreator = new RentalCreator(this.rentalList);
+    rentalCreator.create(clientA, book1);
   }
 
   public isBookBorrowed(book: BookType): boolean {
-    return this.rental.getBookStatus(book).getStatus() === 'borrowed';
+    return !!this.getClientOfBook(book);
   }
 
   public getClientOfBook(book: BookType): ClientType | null {
-    return this.rental.getClientOfBook(book);
+    const rentalResolver = new RentalResolver(this.rentalList);
+    return rentalResolver.getClientByBook(book);
   }
 
   public getClientBooks(client: ClientType): Array<BookType> {
-    return this.rental.getClientBooks(client);
+    const rentalResolver = new RentalResolver(this.rentalList);
+    return rentalResolver.getBookListByClient(client).getAllBooks();
   }
 
   public onReturnBookClicked(book: BookType): void {
-    const client = this.getClientOfBook(book);
-    if (!client) {
-      return
-    }
-
-    this.rental.return(client, book);
+    const rentalRemover = new RentalRemover(this.rentalList);
+    rentalRemover.remove(book);
   }
 
   public onNewBookAdd(): void {
@@ -95,6 +96,7 @@ export class AppComponent {
       return;
     }
 
-    this.rental.borrow(this.rentalClient, this.rentalBook);
+    const rentalCreator = new RentalCreator(this.rentalList);
+    rentalCreator.create(this.rentalClient, this.rentalBook);
   }
 }

@@ -5,9 +5,9 @@ import {ClientType} from "../Client/Client";
 
 export interface LibraryType {
   addBook(book: BookType): void;
-  getAllBooks(): Array<BookType>;
+  getAllBooks(): BookListType;
   addClient(client: ClientType): void;
-  getAllClients(): Array<ClientType>;
+  getAllClients(): ClientListType;
 }
 
 export class Library implements LibraryType {
@@ -18,15 +18,15 @@ export class Library implements LibraryType {
     this.bookList.addBook(book);
   }
 
-  getAllBooks(): Array<BookType> {
-    return this.bookList.getAllBooks();
+  getAllBooks(): BookListType {
+    return this.bookList;
   }
 
   addClient(client: ClientType): void {
     this.clientList.addClient(client);
   }
 
-  getAllClients(): Array<ClientType> {
-    return this.clientList.getAllClients();
+  getAllClients(): ClientListType {
+    return this.clientList;
   }
 }
